@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -57,16 +59,17 @@ private fun Greeting(name: String) {
 }
 
 @Composable
-private fun Greetings(names: List<String> = listOf("World", "Compose")) {
-    Column(modifier = Modifier.padding(vertical = 4.dp)) {
-        names.forEach { Greeting(it) }
+private fun Greetings(names: List<String> = List(1000) { "$it" }) {
+//    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+//        names.forEach { Greeting(it) }
+//    }
+    LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
+        items(names) { name -> Greeting(name) }
     }
 }
 
 @Composable
 private fun OnboardingScreen(onContinueClicked: () -> Unit) {
-
-
     Surface {
         Column(
             modifier = Modifier.fillMaxSize(),
