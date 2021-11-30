@@ -18,12 +18,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.hyunwoolee.layoutscodelab.ui.theme.LayoutsCodelabTheme
 import kotlinx.coroutines.launch
+
+val topics = listOf(
+    "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
+    "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
+    "Religion", "Social sciences", "Technology", "TV", "Writing"
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -175,6 +183,28 @@ fun ImageList() {
     }
 }
 
+@Composable
+fun Chip(modifier: Modifier = Modifier, text: String) {
+    Card(
+        modifier = modifier,
+        border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(16.dp, 16.dp)
+                    .background(color = MaterialTheme.colors.secondary)
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(text = text)
+        }
+    }
+}
+
 //@Preview("ListSample", showBackground = true, showSystemUi = true)
 //@Composable
 //fun ListPreview() {
@@ -212,11 +242,16 @@ fun CustomLayoutModifierSample() {
 @Composable
 fun CustomLayoutSample() {
     LayoutsCodelabTheme {
-        CustomLayout(Modifier.padding(8.dp)) {
-            Text("MyOwnColumn")
-            Text("places items")
-            Text("vertically.")
-            Text("We've done it by hand!")
+//        CustomLayout(Modifier.padding(8.dp)) {
+//            Text("MyOwnColumn")
+//            Text("places items")
+//            Text("vertically.")
+//            Text("We've done it by hand!")
+//        }
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            StaggeredGrid {
+                topics.map { Chip(text = it, modifier = Modifier.padding(8.dp)) }
+            }
         }
     }
 }

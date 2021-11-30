@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Dp
+import kotlin.math.max
 
 // Using Compose's layout modifier: manually control how to measure and position an element
 // measureable: child to be measured and placed
@@ -58,6 +59,57 @@ fun CustomLayout(
 
                 // Record the y co-ord placed up to
                 yPosition += placeable.height
+            }
+        }
+    }
+}
+
+@Composable
+fun StaggeredGrid(
+    modifier: Modifier = Modifier,
+    rows: Int = 3,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        // Keep track of the width of each row
+        val rowWidths = IntArray(rows) { 0 }
+
+        // Keep track of the max height of each row
+        val rowHeights = IntArray(rows) { 0 }
+        val placeables = measurables.mapIndexed { index, measurable ->
+            val placeable = measurable.measure(constraints)
+
+            val row = index % rows
+            rowWidths[row] += placeable.width
+            rowHeights[row] = max(rowHeights[row], placeable.height)
+            placeable
+        }
+
+        // 무조건 Constraint의 Size 이내에서 그리도록 한다
+        val width = rowWidths.maxOrNull()
+            ?.coerceIn(constraints.minWidth..constraints.maxWidth)
+            ?: constraints.minWidth
+        val height = rowHeights.sumOf { it }
+            .coerceIn(constraints.minHeight..constraints.maxHeight)
+
+        val rowY = IntArray(rows) { 0 }
+        for (index in 1 until rows) {
+            rowY[index] = rowY[index - 1] + rowHeights[index - 1]
+        }
+
+        layout(width, height) {
+            val rowX = IntArray(rows) { 0 }
+
+            placeables.forEachIndexed { index, placeable ->
+                val row = index % rows
+                placeable.placeRelative(
+                    x = rowX[row],
+                    y = rowY[row]
+                )
+                rowX[row] += placeable.width
             }
         }
     }
