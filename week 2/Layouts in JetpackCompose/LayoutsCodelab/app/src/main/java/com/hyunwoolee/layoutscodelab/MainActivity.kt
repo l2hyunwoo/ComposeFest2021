@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberImagePainter
 import com.hyunwoolee.layoutscodelab.ui.theme.LayoutsCodelabTheme
 import kotlinx.coroutines.launch
@@ -205,6 +206,43 @@ fun Chip(modifier: Modifier = Modifier, text: String) {
     }
 }
 
+@Composable
+fun ConstraintLayoutContent() {
+    ConstraintLayout(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val (buttonLeft, buttonRight, text) = createRefs()
+        val barrier = createEndBarrier(buttonLeft)
+        Button(onClick = { /*TODO*/ },
+            // Assign reference "button" to the Button Composable
+            // and constrain it to the top of the ConstraintLayout
+            modifier = Modifier.constrainAs(buttonLeft) {
+                top.linkTo(parent.top, margin = 16.dp)
+                start.linkTo(parent.start)
+                end.linkTo(buttonRight.start)
+            }
+        ) {
+            Text(text = "Button 1")
+        }
+
+        Text("Text", Modifier.constrainAs(text) {
+            top.linkTo(buttonLeft.bottom, margin = 16.dp)
+            centerHorizontallyTo(parent)
+        })
+
+        Button(
+            onClick = { /* TODO */ },
+            modifier = Modifier.constrainAs(buttonRight) {
+                top.linkTo(parent.top, margin = 16.dp)
+                start.linkTo(buttonLeft.end)
+                end.linkTo(parent.end)
+            }
+        ) {
+            Text(text = "Button 2")
+        }
+    }
+}
+
 //@Preview("ListSample", showBackground = true, showSystemUi = true)
 //@Composable
 //fun ListPreview() {
@@ -253,5 +291,13 @@ fun CustomLayoutSample() {
                 topics.map { Chip(text = it, modifier = Modifier.padding(8.dp)) }
             }
         }
+    }
+}
+
+@Preview("ConstraintLayoutSample", showBackground = true)
+@Composable
+fun ConstraintLayoutSample() {
+    LayoutsCodelabTheme {
+        ConstraintLayoutContent()
     }
 }
