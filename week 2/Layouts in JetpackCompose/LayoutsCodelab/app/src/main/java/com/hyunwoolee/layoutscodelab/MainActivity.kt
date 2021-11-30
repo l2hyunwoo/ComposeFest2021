@@ -12,11 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,6 +80,35 @@ fun PhotographerCardPreview() {
 }
 
 @Composable
+fun ScaffoldSample() {
+    Scaffold(
+        // TopAppBar 역시 Slot Api로 구성됨
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "LayoutCodelab")
+                },
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        BodyContent(Modifier.padding(innerPadding))
+    }
+}
+
+@Composable
+fun BodyContent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(8.dp)) {
+        Text(text = "Hi There")
+        Text(text = "Thanks for going through the Layouts codelab")
+    }
+}
+
+@Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
@@ -87,6 +117,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     LayoutsCodelabTheme {
-        Greeting("Android")
+        ScaffoldSample()
     }
 }
