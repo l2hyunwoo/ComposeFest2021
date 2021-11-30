@@ -75,11 +75,6 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(name = "PhotographerCardPreview")
-@Composable
-fun PhotographerCardPreview() {
-    PhotographerCard()
-}
 
 @Composable
 fun ScaffoldSample() {
@@ -180,18 +175,48 @@ fun ImageList() {
     }
 }
 
-@Preview("ListSample", showBackground = true, showSystemUi = true)
-@Composable
-fun ListPreview() {
-    LayoutsCodelabTheme {
-        ImageList()
-    }
-}
+//@Preview("ListSample", showBackground = true, showSystemUi = true)
+//@Composable
+//fun ListPreview() {
+//    LayoutsCodelabTheme {
+//        ImageList()
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     LayoutsCodelabTheme {
         ScaffoldSample()
+    }
+}
+
+@Preview(name = "PhotographerCardPreview")
+@Composable
+fun PhotographerCardPreview() {
+    PhotographerCard()
+}
+
+@Preview(name = "CustomLayoutModifierSample")
+@Composable
+fun CustomLayoutModifierSample() {
+    LayoutsCodelabTheme {
+        Column {
+            Text("Hi there!", Modifier.firstBaselineToTop(32.dp))
+            Text("Hi there!", Modifier.padding(top = 32.dp))
+        }
+    }
+}
+
+@Preview(name = "CustomLayoutSample")
+@Composable
+fun CustomLayoutSample() {
+    LayoutsCodelabTheme {
+        CustomLayout(Modifier.padding(8.dp)) {
+            Text("MyOwnColumn")
+            Text("places items")
+            Text("vertically.")
+            Text("We've done it by hand!")
+        }
     }
 }
