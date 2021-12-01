@@ -243,6 +243,43 @@ fun ConstraintLayoutContent() {
     }
 }
 
+/*
+* Intrinsics lets you query children before they're actually measured.
+* 실제 measure를 하기 전에 내장 intrinsic measure를 활용하여 query한다
+* */
+@Composable
+fun TwoTextsButton(
+    modifier: Modifier = Modifier,
+    textLeft: String,
+    textRight: String
+) {
+    // Row가 child를 각각 따로 measure하기 때문에 Text의 height를 Divider에 제약 조건으로 줄수 없기 때문입니다
+    // height(IntrinsicSize.Min)는 하위 요소의 크기를 고유한 최소 높이로 강제 지정합니다.
+    // 이 기능은 반복적이므로 Row 및 하위 minIntrinsicHeight를 쿼리합니다.
+    Row(modifier = modifier.height(IntrinsicSize.Min)) {
+        Text(
+            text = textLeft,
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 4.dp)
+                .wrapContentWidth(Alignment.Start)
+        )
+        Divider(
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+        )
+        Text(
+            text = textRight,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 4.dp)
+                .wrapContentWidth(Alignment.End)
+        )
+    }
+}
+
 //@Preview("ListSample", showBackground = true, showSystemUi = true)
 //@Composable
 //fun ListPreview() {
@@ -299,5 +336,13 @@ fun CustomLayoutSample() {
 fun ConstraintLayoutSample() {
     LayoutsCodelabTheme {
         ConstraintLayoutContent()
+    }
+}
+
+@Preview("IntrinsicQuerySample", showBackground = true, showSystemUi = true)
+@Composable
+fun IntrinsicSizeQuerySample() {
+    LayoutsCodelabTheme {
+        TwoTextsButton(textLeft = "Hello", textRight = "Nunu")
     }
 }
