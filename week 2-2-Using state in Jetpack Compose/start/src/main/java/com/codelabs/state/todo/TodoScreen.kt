@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -90,8 +91,25 @@ fun TodoScreen(
  * @param onItemClicked (event) notify caller that the row was clicked
  * @param modifier modifier for this element
  */
+/*
+* "Composables should be idempotent to support recomposition."
+* Composable은 Recompostion이 일어나도 항상 동일한 결과를 보장해야한다.
+* 호출자가 이를 통제할 수 있도록 해야한다(Testable and Reusable)
+*
+When adding memory to a composable, always ask yourself
+"will some caller reasonably want to control this?"
+
+If the answer is yes, make a parameter instead.
+
+If the answer is no, keep it as a local variable.
+* */
 @Composable
-fun TodoRow(todo: TodoItem, onItemClicked: (TodoItem) -> Unit, modifier: Modifier = Modifier) {
+fun TodoRow(
+    todo: TodoItem,
+    onItemClicked: (TodoItem) -> Unit,
+    modifier: Modifier = Modifier,
+    iconAlpha: Float = remember(todo.id) { randomTint() }
+) {
     Row(
         modifier = modifier
             .clickable { onItemClicked(todo) }
@@ -99,8 +117,11 @@ fun TodoRow(todo: TodoItem, onItemClicked: (TodoItem) -> Unit, modifier: Modifie
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(todo.task)
+        // Recomposition을 할 때마다 randomTint가 작용함
+        val iconAlpha = remember(todo.id) { randomTint() }
         Icon(
             imageVector = todo.icon.imageVector,
+            tint = LocalContentColor.current.copy(alpha = iconAlpha),
             contentDescription = stringResource(id = todo.icon.contentDescription)
         )
     }
@@ -110,7 +131,7 @@ private fun randomTint(): Float {
     return Random.nextFloat().coerceIn(0.3f, 0.9f)
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewTodoScreen() {
     val items = listOf(
@@ -122,7 +143,7 @@ fun PreviewTodoScreen() {
     TodoScreen(items, {}, {})
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewTodoRow() {
     val todo = remember { generateRandomTodoItem() }
