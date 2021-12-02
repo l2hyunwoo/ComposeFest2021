@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 
 class TodoViewModel : ViewModel() {
 
+    // States: TodoItems
     private var _todoItems = MutableLiveData(listOf<TodoItem>())
     val todoItems: LiveData<List<TodoItem>> = _todoItems
 

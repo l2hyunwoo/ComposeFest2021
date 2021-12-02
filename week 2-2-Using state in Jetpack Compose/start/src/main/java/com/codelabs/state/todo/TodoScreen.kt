@@ -44,6 +44,13 @@ import kotlin.random.Random
  * @param onAddItem (event) request an item be added
  * @param onRemoveItem (event) request an item be removed
  */
+
+/*
+* State hoisting is a pattern of moving state up to make a component stateless.
+* When applied to composables, this often means introducing two parameters to the composable.
+* - value: T – the current value to display
+* - onValueChange: (T) -> Unit – an event that requests the value to change, where T is the proposed new value
+* */
 @Composable
 fun TodoScreen(
     items: List<TodoItem>,
