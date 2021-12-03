@@ -57,7 +57,7 @@ fun TodoScreen(
 ) {
     Column {
         TodoItemInputBackground(elevate = true, modifier = Modifier.fillMaxWidth()) {
-            TodoItemInput(onItemComplete = onAddItem)
+            TodoItemEntryInput(onItemComplete = onAddItem)
         }
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -140,8 +140,9 @@ fun TodoInputTextField(
     TodoInputText(text = text, onTextChange = onTextChange, modifier)
 }
 
+// Stateful Composable
 @Composable
-fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
+fun TodoItemEntryInput(onItemComplete: (TodoItem) -> Unit) {
     // onItemComplete is an event will fire when an item is completed by the user
     // Hoisting makes share the state to Composables.
     val (text, setText) = remember { mutableStateOf("") }
@@ -152,6 +153,26 @@ fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
         setIcon(TodoIcon.Default)
         setText("")
     }
+    TodoItemInput(
+        text = text,
+        onTextChange = setText,
+        icon = icon,
+        onIconChange = setIcon,
+        submit = submit,
+        iconsVisible = iconsVisible
+    )
+}
+
+// Stateless Composable
+@Composable
+private fun TodoItemInput(
+    text: String,
+    onTextChange: (String) -> Unit,
+    icon: TodoIcon,
+    onIconChange: (TodoIcon) -> Unit,
+    submit: () -> Unit,
+    iconsVisible: Boolean,
+) {
     Column {
         Row(
             Modifier
@@ -163,7 +184,7 @@ fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
                     .weight(1f)
                     .padding(end = 8.dp),
                 text = text,
-                onTextChange = setText,
+                onTextChange = onTextChange,
                 onImeAction = submit
             )
             TodoEditButton(
@@ -177,7 +198,7 @@ fun TodoItemInput(onItemComplete: (TodoItem) -> Unit) {
         if (iconsVisible) {
             AnimatedIconRow(
                 icon = icon,
-                onIconChange = setIcon,
+                onIconChange = onIconChange,
                 modifier = Modifier.padding(top = 8.dp)
             )
         } else {
@@ -207,4 +228,4 @@ fun PreviewTodoRow() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewTodoItemInput() = TodoItemInput(onItemComplete = {})
+fun PreviewTodoItemInput() = TodoItemEntryInput(onItemComplete = {})
