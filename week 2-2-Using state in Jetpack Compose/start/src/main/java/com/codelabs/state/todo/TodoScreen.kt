@@ -35,6 +35,15 @@ import androidx.compose.ui.unit.dp
 import com.codelabs.state.util.generateRandomTodoItem
 import kotlin.random.Random
 
+/*
+* When hoisting state, there are three rules to help you figure out where it should go
+
+State should be hoisted to at least the lowest common parent of all composables that use the state (or read)
+State should be hoisted to at least the highest level it may be changed (or modified)
+If two states change in response to the same events they should be hoisted together
+You can hoist state higher than these rules require, but underhoisting state will make it difficult or impossible to follow unidirectional data flow.
+* */
+
 /**
  * Stateless component that is responsible for the entire todo screen.
  *
