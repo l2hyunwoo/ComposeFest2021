@@ -54,13 +54,19 @@ import androidx.compose.ui.unit.dp
 import com.codelab.theming.R
 import com.codelab.theming.data.Post
 import com.codelab.theming.data.PostRepo
+import com.codelab.theming.ui.start.theme.JetnewsTheme
 import java.util.Locale
+
+/*
+*  Material Design — a comprehensive design system for creating digital interfaces
+* Material Theme comprises color, typography and shape attributes.
+* */
 
 @Composable
 fun Home() {
     val featured = remember { PostRepo.getFeaturedPost() }
     val posts = remember { PostRepo.getPosts() }
-    MaterialTheme {
+    JetnewsTheme {
         Scaffold(
             topBar = { AppBar() }
         ) { innerPadding ->
@@ -217,7 +223,18 @@ private fun PostItemPreview() {
 @Composable
 private fun FeaturedPostPreview() {
     val post = remember { PostRepo.getFeaturedPost() }
-    FeaturedPost(post = post)
+    JetnewsTheme {
+        FeaturedPost(post = post)
+    }
+}
+
+@Preview("Featured Post • Dark")
+@Composable
+private fun FeaturedPostDarkPreview() {
+    val post = remember { PostRepo.getFeaturedPost() }
+    JetnewsTheme(darkTheme = true) {
+        FeaturedPost(post = post)
+    }
 }
 
 @Preview("Home")
