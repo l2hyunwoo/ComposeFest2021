@@ -308,8 +308,6 @@ private fun HomeFloatingActionButton(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun EditMessage(shown: Boolean) {
-    // TODO 2-2: The message should slide down from the top on appearance and slide up on
-    //           disappearance.
     AnimatedVisibility(
         visible = shown,
         enter = slideInVertically(
@@ -671,7 +669,6 @@ private fun TaskRow(task: String, onRemove: () -> Unit) {
 private fun Modifier.swipeToDismiss(
     onDismissed: () -> Unit
 ): Modifier = composed {
-    // TODO 6-1: Create an Animatable instance for the offset of the swiped element.
     val offsetX = remember { Animatable(0f) }
     pointerInput(Unit) {
         // Used to calculate a settling position of a fling animation.
@@ -682,13 +679,11 @@ private fun Modifier.swipeToDismiss(
                 // Wait for a touch down event.
                 val pointerId = awaitPointerEventScope { awaitFirstDown().id }
                 offsetX.stop()
-                // TODO 6-2: Touch detected; the animation should be stopped.
                 // Prepare for drag events and record velocity of a fling.
                 val velocityTracker = VelocityTracker()
                 // Wait for drag events.
                 awaitPointerEventScope {
                     horizontalDrag(pointerId) { change ->
-                        // TODO 6-3: Apply the drag change to the Animatable offset.
                         val horizontalDragOffset = offsetX.value + change.positionChange().x
                         launch {
                             offsetX.snapTo(horizontalDragOffset)
@@ -701,18 +696,12 @@ private fun Modifier.swipeToDismiss(
                 }
                 // Dragging finished. Calculate the velocity of the fling.
                 val velocity = velocityTracker.calculateVelocity().x
-                // TODO 6-4: Calculate the eventual position where the fling should settle
-                //           based on the current offset value and velocity
                 val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
-                // TODO 6-5: Set the upper and lower bounds so that the animation stops when it
-                //           reaches the edge.
                 offsetX.updateBounds(
                     lowerBound = -size.width.toFloat(),
                     upperBound = size.width.toFloat()
                 )
                 launch {
-                    // TODO 6-6: Slide back the element if the settling position does not go beyond
-                    //           the size of the element. Remove the element if it does.
                     if (targetOffsetX.absoluteValue <= size.width) {
                         // Not enough velocity; Slide back.
                         offsetX.animateTo(targetValue = 0f, initialVelocity = velocity)
@@ -727,7 +716,6 @@ private fun Modifier.swipeToDismiss(
         }
     }
         .offset {
-            // TODO 6-7: Use the animating offset value here.
             IntOffset(offsetX.value.roundToInt(), 0)
         }
 }
